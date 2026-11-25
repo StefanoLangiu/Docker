@@ -47,8 +47,9 @@ Il sistema è composto da due servizi principali isolati e coordinati tramite **
    RCON_PASSWORD=tua_password_rcon_se_necessaria
 
 ### Avvio del container
-docker compose up --build -d
-
+```env
+  docker compose up --build -d
+```
 Una volta avviato:
 
 1. Dashboard Web: Disponibile su http://localhost:3000
