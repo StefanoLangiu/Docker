@@ -1,0 +1,17 @@
+# Dipendenze locali
+node_modules
+npm-debug.log
+yarn-error.log
+
+# File di configurazione ed ambiente locali
+.env
+.env.local
+
+# Git e controllo versione
+.git
+.gitignore
+
+# Cartelle di test, build temporanee o IDE
+.vscode
+.idea
+*.log

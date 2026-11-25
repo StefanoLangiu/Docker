@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Multi-Bot Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #131a2a;
+            --bg-card-hover: #182136;
+            --border-color: #232d42;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-emerald: #10b981;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            background-image: radial-gradient(circle at 50% 0%, #17223b 0%, transparent 60%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 30px 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .title-group h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .title-group p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .dynmap-btn {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dynmap-btn:hover {
+            background: var(--accent-blue);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Grid Metriche */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        .metric-card:hover {
+            border-color: #334155;
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .metric-sub {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        /* Indicatore di stato animato */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+            display: inline-block;
+        }
+
+        .status-dot.online {
+            background-color: var(--accent-emerald);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.offline {
+            background-color: var(--accent-red);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.9; }
+        }
+
+        /* Barra RAM */
+        .progress-bg {
+            width: 100%;
+            height: 6px;
+            background: #1e293b;
+            border-radius: 99px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), #60a5fa);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s ease;
+        }
+
+        /* Sezioni Inferiori */
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-badge {
+            font-size: 0.72rem;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 3px 10px;
+            border-radius: 99px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        /* Badge Bot Connessi */
+        .bots-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bot-badge {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bot-badge::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+        }
+
+        .empty-state {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Terminale Log */
+        .terminal-box {
+            background: #070a11;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 16px;
+            height: 270px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+
+        .terminal-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .terminal-box::-webkit-scrollbar-track {
+            background: #070a11;
+        }
+        .terminal-box::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        .log-row {
+            padding: 6px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .log-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .log-time {
+            color: #64748b;
+            font-size: 0.78rem;
+            flex-shrink: 0;
+        }
+
+        .log-msg {
+            color: #e2e8f0;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title-group">
+                <h1>Minecraft Multi-Bot Control Center</h1>
+                <p>Orchestrazione Docker, telemetria server e audit multi-utente via Telegram</p>
+            </div>
+            <a href="http://localhost:8123" target="_blank" class="dynmap-btn">
+                🗺️ Apri Mappa Live (Dynmap) ↗
+            </a>
+        </header>
+
+        <!-- Metriche Principali -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Stato Server PaperMC</div>
+                <div class="metric-value">
+                    <span id="statusDot" class="status-dot"></span>
+                    <span id="serverStatus">Verifica...</span>
+                </div>
+                <div class="metric-sub" id="serverPort">Porta 25565 (v1.20.4)</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Bot Attivi / Giocatori</div>
+                <div class="metric-value">
+                    <span id="botCount">0</span>
+                    <span style="font-size: 1rem; color: var(--text-secondary); font-weight: 400;">
+                        (<span id="playerCount">0/0</span> tot)
+                    </span>
+                </div>
+                <div class="metric-sub">Limite massimo: 9 bot</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Utilizzo CPU Container</div>
+                <div class="metric-value" id="cpuUsage">0.0%</div>
+                <div class="metric-sub">Multi-core JVM PaperMC</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Memoria RAM Allocata</div>
+                <div class="metric-value" id="ramUsage">0 MB</div>
+                <div class="progress-bg">
+                    <div class="progress-fill" id="ramBar"></div>
+                </div>
+                <div class="metric-sub" id="ramSub">Su 0 MB disponibili</div>
+            </div>
+        </div>
+
+        <!-- Bot Connessi -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Istanze Mineflayer Connesse</h2>
+                <span class="live-badge">SYNC 2s</span>
+            </div>
+            <div class="bots-container" id="botBadgesContainer">
+                <span class="empty-state">Nessun bot attivo nel server al momento. Usa /spawnbot su Telegram.</span>
+            </div>
+        </div>
+
+        <!-- Terminale Audit Log -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Audit Log & Azioni Utenti in Tempo Reale</h2>
+                <span class="live-badge">LIVE STREAM</span>
+            </div>
+            <div class="terminal-box" id="logContainer">
+                <div class="log-row">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-msg" style="color: #64748b;">In attesa di eventi dal bot Telegram...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function updateStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+
+                // Stato Server
+                const dot = document.getElementById('statusDot');
+                const statusText = document.getElementById('serverStatus');
+                if (data.online) {
+                    dot.className = 'status-dot online';
+                    statusText.innerText = 'Online';
+                    statusText.style.color = '#10b981';
+                } else {
+                    dot.className = 'status-dot offline';
+                    statusText.innerText = 'Offline';
+                    statusText.style.color = '#ef4444';
+                }
+
+                // Contatori e CPU
+                document.getElementById('botCount').innerText = data.activeBotsCount ?? 0;
+                document.getElementById('playerCount').innerText = `${data.players}/${data.maxPlayers}`;
+                document.getElementById('cpuUsage').innerText = `${data.cpuPercent || '0.0'}%`;
+
+                // RAM & Barra di avanzamento
+                const used = data.ramUsedMB || 0;
+                const limit = data.ramLimitMB || 1;
+                const pct = Math.min(100, Math.round((used / limit) * 100));
+                document.getElementById('ramUsage').innerText = `${used} MB`;
+                document.getElementById('ramSub').innerText = `${pct}% di ${data.ramLimitMB || 0} MB`;
+                document.getElementById('ramBar').style.width = `${pct}%`;
+
+                // Badge dei bot attivi
+                const badgesContainer = document.getElementById('botBadgesContainer');
+                if (data.botNames && data.botNames.length > 0) {
+                    badgesContainer.innerHTML = data.botNames
+                        .map(name => `<span class="bot-badge">${name}</span>`)
+                        .join('');
+                } else {
+                    badgesContainer.innerHTML = `<span class="empty-state">Nessun bot attivo nel server al momento. Usa /spawnbot su Telegram.</span>`;
+                }
+
+                // Log in tempo reale
+                const logContainer = document.getElementById('logContainer');
+                if (data.logs && data.logs.length > 0) {
+                    logContainer.innerHTML = data.logs.map(log => `
+                        <div class="log-row">
+                            <span class="log-time">[${log.time}]</span>
+                            <span class="log-msg">${log.text}</span>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error('Errore aggiornamento dashboard:', e);
+            }
+        }
+
+        setInterval(updateStats, 2000);
+        updateStats();
+    </script>
+</body>
+</html>

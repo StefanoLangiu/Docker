@@ -1,0 +1,10 @@
+# Segreti e chiavi API
+.env
+
+# Dipendenze locali di Node.js
+node_modules/
+bot/node_modules/
+
+# Log e file temporanei di sistema
+*.log
+.DS_Store
