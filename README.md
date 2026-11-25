@@ -26,7 +26,7 @@ Il sistema è composto da due servizi principali isolati e coordinati tramite **
 * **Orchestrazione Multi-Bot:** Gestione dinamica di più istanze di bot simultanee tramite una struttura dati in memoria (`Map`), con supporto a limiti di concorrenza per la sicurezza delle risorse.
 * **Telemetria in Tempo Reale:** Monitoraggio di CPU, RAM, stato del server e numero di giocatori attivi direttamente dalla dashboard web.
 * **Audit Log & Tracciabilità:** Registro delle attività in tempo reale che traccia quale utente Telegram ha generato o mosso ciascun bot.
-* **Automazione dei Permessi (OP):** Assegnazione automatica dei privilegi di operatore a ogni bot non appena effettua lo `spawn` nel mondo di gioco.
+* **Automazione dei Permessi (OP):** Assegnazione automatica dei privilegi di operatore a ogni bot non appena effettua lo `spawn` nel mondo di gioco per permettere il teletrasposrto.
 * **Interfaccia Telegram Condivisibile:** Comandi accessibili sia in chat privata che all'interno di gruppi Telegram.
 
 ---
@@ -47,7 +47,9 @@ Il sistema è composto da due servizi principali isolati e coordinati tramite **
    RCON_PASSWORD=tua_password_rcon_se_necessaria
 
 ### Avvio del container
-docker compose up --build -d
+```env
+  docker compose up --build -d
+```
 
 Una volta avviato:
 
