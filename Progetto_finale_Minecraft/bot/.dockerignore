@@ -6,6 +6,7 @@ yarn-error.log
 # File di configurazione ed ambiente locali
 .env
 .env.local
+.dockerignore
 
 # Git e controllo versione
 .git

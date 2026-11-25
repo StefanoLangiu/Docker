@@ -26,10 +26,11 @@ services:
           memory: 2G
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8123"]
+      test: ["CMD", "mc-health"]
       interval: 10s
       timeout: 5s
       retries: 15
+      start_period: 120s
 
   bot:
     build: ./bot
